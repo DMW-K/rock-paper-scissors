@@ -2,11 +2,42 @@
 let rock = 'rock'
 let paper = 'paper'
 let scissors = 'scissors'
+let round = 0
+let playerWins = 0
+let computerWins =0
+
+
 
 const computerChoiceDisplay = document.getElementById('computer-choice');
 const playerChoiceDisplay = document.getElementById('player-choice');
 const resultDisplay = document.getElementById('result');
-const possibleChoices = document.querySelectorAll('button')
+const roundDisplay = document.getElementById('round');
+const possibleChoices = document.querySelectorAll('button');
+
+
+function updateRoundDisplay () {
+    roundDisplay.textContent = `Round ${round} of 5`;
+}
+
+function updateScoreDisplay () {
+    roundDisplay.textContent = `Player: ${playerWins} - Computer: ${computerWins}`;
+}
+
+
+function checkWinner() {
+    if (playerWins === 5) {
+        resultDisplay.textContent = "Player wins the game!";
+        disableButtons();
+    } else if (computerWins === 5) {
+        resultDisplay.textContent = "Computer wins the game!";
+        disableButtons();
+    }
+}
+
+function disableButtons() {
+    possibleChoices.forEach(possibleChoice => possibleChoice.disabled = true);
+}
+
 
 // computer random choice 
 function getComputerChoice () {
@@ -17,9 +48,6 @@ function getComputerChoice () {
 } 
 
 
-// for (let round = 1; round <= 5; round++) {
-//     playRound(round);
-// }
 
 // player and computer selections
 function playRound(playerSelection, computerSelection) {
@@ -27,16 +55,16 @@ function playRound(playerSelection, computerSelection) {
 // tie option
     if (playerSelection === computerSelection) {
     return ("its a Tie!")
-}
-
-    if (
+} else if (
         (playerSelection === 'rock' && computerSelection === scissors)||
         (playerSelection === 'paper' && computerSelection === rock)||
         (playerSelection === 'scissors' && computerSelection === paper) 
     ) {
+        playerWins++
         return (` Congrates you Win! ${playerSelection} beats ${computerSelection}!`)
     } else {
-    return (` you lose! ${computerSelection} beats ${playerSelection}`)
+        computerWins++
+        return (` you lose! ${computerSelection} beats ${playerSelection}`)
 }
 
   } 
@@ -44,6 +72,12 @@ function playRound(playerSelection, computerSelection) {
 
 
 possibleChoices.forEach(possibleChoice => possibleChoice.addEventListener('click', (e) => {
+
+    // if (playerWins === 5 || computerWins === 5) {
+    //     resultDisplay.textContent = "Game Over";
+    //     return;
+    // }
+
     // get players choice
     playerSelection = e.target.id
     playerChoiceDisplay.innerHTML = playerSelection;
@@ -57,6 +91,16 @@ possibleChoices.forEach(possibleChoice => possibleChoice.addEventListener('click
     const roundResult = playRound(playerSelection, computerSelection);
     resultDisplay.textContent = roundResult;
 
+    // round++;
+    updateRoundDisplay();
+
+    updateScoreDisplay();
+
+    // if (round === 5) {
+    //     resultDisplay.textContent = "Game Over";
+    // }
+
+    checkWinner();
 
 }))
 
